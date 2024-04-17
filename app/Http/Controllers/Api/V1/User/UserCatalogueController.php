@@ -13,23 +13,38 @@ class UserCatalogueController extends Controller
 {
     protected $userCatalogueService;
 
-    public function __construct(UserCatalogueService $userCatalogueService) {
+    public function __construct(UserCatalogueService $userCatalogueService)
+    {
         $this->userCatalogueService = $userCatalogueService;
     }
 
-    public function index(Request $request){
-       $userCatalogues= $this->userCatalogueService->paginate($request);
+    public function index(Request $request)
+    {
+        $userCatalogues = $this->userCatalogueService->paginate($request);
         if ($userCatalogues->isEmpty()) {
-                return response()->json(['message' => 'Không có dữ liệu'], 404);
+            return response()->json(['message' => 'Không có dữ liệu'], 404);
         }
-       return response()
+        return response()
             ->json($userCatalogues, ResponseEnum::OK);
     }
 
-    public function store(UserCatalogueStoreRequest $request){
-        if( $this->userCatalogueService->create($request)){
+    public function store(UserCatalogueStoreRequest $request)
+    {
+        if ($this->userCatalogueService->create($request)) {
             return response()->json([
-            'message' => 'Thêm mới bản ghi thành công'
+                'message' => 'Thêm mới bản ghi thành công'
+            ], ResponseEnum::OK);
+        }
+        return response()->json([
+            'message' => 'Đã có lỗi xảy ra, hãy thử lại'
+        ], ResponseEnum::BAD_REQUEST);
+    }
+
+    public function deteleAll(Request $request)
+    {
+        if ($this->userCatalogueService->deleteAll($request)) {
+            return response()->json([
+                'message' => 'Xóa dữ liệu thành công!!'
             ], ResponseEnum::OK);
         }
         return response()->json([

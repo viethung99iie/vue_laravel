@@ -17,7 +17,9 @@ const mutations = {
     setPagination (state, response) {
         state.pagination = response
     },
-
+    setDeleteRows (state, ids) {
+        state.data = state.data.filter(item => !ids.includes(item.id))
+    }
 }
 
 const getters = {
@@ -43,6 +45,12 @@ const actions = {
         commit('setPage', page)
         commit('setData', response.data)
         commit('setPagination', response)
+    }, async deleteRows({commit}, ids) {
+        try {
+            commit('setDeleteRows', ids)
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

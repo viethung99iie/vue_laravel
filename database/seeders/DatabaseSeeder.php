@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Nguyễn Việt Hưng',
             'email' => 'viethungw@gmail.com',
             'password' => Hash::make('password'),
-            'user_catalogue_id' => 1,
+            'user_catalogue_id' => 8,
             'publish' => 1,
         ]);
     }

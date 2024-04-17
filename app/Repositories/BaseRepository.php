@@ -81,7 +81,6 @@ class BaseRepository implements BaseRepositoryInterface
     public function forceDeleteAll(array $ids = []){
         return $this->model->whereIn('id', $ids)->forceDelete();
     }
-
     public function forceDelete(int $id = 0){
         return $this->findById($id)->forceDelete();
     }

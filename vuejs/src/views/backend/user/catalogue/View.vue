@@ -14,6 +14,10 @@
         createTitle : 'Thêm mới thành viên',
         createLink : '/user/catalogue/store',
     })
+    const actions = ref({
+        deleteAll : 'user/catalogue/deteleAll',
+        updateStatusAll : '/update/status/all'
+    });
 
     const formErrorMessage = ref({});
     const tableConfig = ref({
@@ -40,7 +44,7 @@
                             <IboxTitle :tableTitle="tableTitle"/>
                             <div class="ibox-content">
                                  <IboxFilter :filter="filter" />
-                                    <Table :tableConfig="tableConfig" :endpoint="endpoint" :model="model"/>
+                                    <Table :tableConfig="tableConfig" :endpoint="endpoint" :model="model" :actions="actions"/>
                             </div>
                         </div>
                     </div>

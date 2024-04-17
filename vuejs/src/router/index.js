@@ -5,6 +5,7 @@
     import loginMiddleware from '@/middleware/login'
     import UserCatalogueIndex from '@/views/backend/user/catalogue/View.vue'
     import UserCatalogueStore from '@/views/backend/user/catalogue/Store.vue'
+    import UserCatalogueDelete from '@/views/backend/user/catalogue/Delete.vue'
 
 
 const router = createRouter({
@@ -14,8 +15,7 @@ const router = createRouter({
     {path: '/dashboard',name: 'dashboard.index',component: Dashboard,meta: {middleware: [authMiddleware]}},
     {path: '/user/catalogue/index',name: 'user.catalogue.index',component: UserCatalogueIndex,meta: {middleware: [authMiddleware]}},
     {path: '/user/catalogue/store',name: 'user.catalogue.store',component: UserCatalogueStore,meta: {middleware: [authMiddleware]}},
-    // {path: '/user/store',name: 'user.store',component: UserStore},
-    // {path: '/user/delete',name: 'user.delete',component: UserDelete},
+    {path: '/user/catalogue/delete/:id(\\d+)',name: 'user.catalogue.delete',component: UserCatalogueDelete,meta: {middleware: [authMiddleware]}},
   ]
 })
 

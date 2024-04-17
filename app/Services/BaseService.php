@@ -39,25 +39,23 @@ class BaseService
         }
     }
 
-    // public function updateStatusAll($request, $subFolder){
-    //     DB::beginTransaction();
-    //     try{
-    //         $payload[$request->input('field')] = $request->input('value');
-    //         $folder = 'Repositories'.'\\'.$subFolder;
-    //         $interface = 'Repository';
-    //         $class = loadClass($request->input('model'), $folder, $interface);
-    //         $class->updateByIds($request->input('ids'), $payload);
-
-
-    //         DB::commit();
-    //         return true;
-    //     }catch(\Exception $e ){
-    //         DB::rollBack();
-    //         // Log::error($e->getMessage());
-    //         // echo $e->getMessage();die();
-    //         return false;
-    //     }
-    // }
+    public function updateStatusAll($request, $subFolder){
+        DB::beginTransaction();
+        try{
+            $payload[$request->input('field')] = $request->input('value');
+            $folder = 'Repositories'.'\\'.$subFolder;
+            $interface = 'Repository';
+            $class = loadClass($request->input('model'), $folder, $interface);
+            $class->updateByIds($request->input('ids'), $payload);
+            DB::commit();
+            return true;
+        }catch(\Exception $e ){
+            DB::rollBack();
+            // Log::error($e->getMessage());
+            // echo $e->getMessage();die();
+            return false;
+        }
+    }
 
 
 }

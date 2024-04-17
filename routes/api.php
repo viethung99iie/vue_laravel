@@ -21,19 +21,20 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->group(function (){
-    Route::get('dashboard/getModule',[DashboardController::class,'getModule'])->name('dashboard.module');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('dashboard/getModule', [DashboardController::class, 'getModule'])->name('dashboard.module');
 
     // UserCatalogue
     Route::get('/user/catalogue', [UserCatalogueController::class, 'index'])->name('user.catalogue.index');
     Route::post('/user/catalogue/store', [UserCatalogueController::class, 'store'])->name('user.catalogue.store');
+    Route::delete('/user/catalogue/deteleAll', [UserCatalogueController::class, 'deteleAll'])->name('user.catalogue.detele.all');
 
 
     // CHANG STATUS
     Route::put('/update/status', [DashboardController::class, 'updateStatus'])->name('dashboard.update.status');
-
+    Route::put('/update/status/all', [DashboardController::class, 'updateStatusAll'])->name('dashboard.update.status.all');
 
 });
 
 
-Route::post('auth/login',[AuthController::class,'login'])->name('login');
+Route::post('auth/login', [AuthController::class, 'login'])->name('login');

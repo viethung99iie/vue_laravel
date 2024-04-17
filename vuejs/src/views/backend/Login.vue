@@ -19,8 +19,8 @@
                 await csrf.getCookie()
                 await store.dispatch('auth/login',{email: email.value,password: password.value})
                 await store.dispatch('message/showMessage',{
-                    message : 'Đăng nhập vào hệ thống thất bại!',
-                    type : 'error'
+                    message : 'Đăng nhập vào hệ thành công!',
+                    type : 'success'
                 });
                 router.push({ name: 'dashboard.index' }); // Use router.push for navigation
             } catch (error) {

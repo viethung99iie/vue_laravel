@@ -18,11 +18,12 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
 
     public function __construct(
         UserCatalogueRepository $userCatalogueRepository
-    ){
-       $this->userCatalogueRepository = $userCatalogueRepository;
+    ) {
+        $this->userCatalogueRepository = $userCatalogueRepository;
     }
 
-    public function paginate($request){
+    public function paginate($request)
+    {
         $perpage = ($request->input('perpage')) ? $request->input('perpage') : 20;
         $condition = [
             'keyword' => $request->input('keyword'),
@@ -41,24 +42,41 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
             // $extend
         );
         return $userCatalogues;
-
     }
 
-    public function create($request){
+    public function create($request)
+    {
 
         DB::beginTransaction();
-        try{
+        try {
             $payload = $request->only($this->payload);
             $userCatalogue = $this->userCatalogueRepository->create($payload);
             DB::commit();
             return true;
-        }catch(\Exception $e ){
+        } catch (\Exception $e) {
             DB::rollBack();
             // Log::error($e->getMessage());
-            echo $e->getMessage();die();
+            echo $e->getMessage();
+            die();
             return false;
         }
     }
 
+    public function deleteAll($request)
+    {
 
+        DB::beginTransaction();
+        try {
+            $ids = explode(',', $request->input('ids'));
+            $userCatalogue = $this->userCatalogueRepository->forceDeleteAll($ids);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log::error($e->getMessage());
+            echo $e->getMessage();
+            die();
+            return false;
+        }
+    }
 }
