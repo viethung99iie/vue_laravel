@@ -15,6 +15,7 @@ const router = createRouter({
     {path: '/dashboard',name: 'dashboard.index',component: Dashboard,meta: {middleware: [authMiddleware]}},
     {path: '/user/catalogue/index',name: 'user.catalogue.index',component: UserCatalogueIndex,meta: {middleware: [authMiddleware]}},
     {path: '/user/catalogue/store',name: 'user.catalogue.store',component: UserCatalogueStore,meta: {middleware: [authMiddleware]}},
+     {path: '/user/catalogue/update/:id(\\d+)',name: 'user.catalogue.update',component: UserCatalogueStore,meta: {middleware: [authMiddleware]}},
     {path: '/user/catalogue/delete/:id(\\d+)',name: 'user.catalogue.delete',component: UserCatalogueDelete,meta: {middleware: [authMiddleware]}},
   ]
 })

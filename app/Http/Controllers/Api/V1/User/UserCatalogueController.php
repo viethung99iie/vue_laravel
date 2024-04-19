@@ -6,16 +6,21 @@ use App\Enums\ResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\UserCatalogue\UserCatalogueStoreRequest;
 use App\Http\Resources\UserCatalogueResource;
+use App\Repositories\User\UserCatalogueRepository;
 use App\Services\Interfaces\User\UserCatalogueServiceInterface as UserCatalogueService;
 use Illuminate\Http\Request;
 
 class UserCatalogueController extends Controller
 {
     protected $userCatalogueService;
+    protected $userCatalogueRepository;
 
-    public function __construct(UserCatalogueService $userCatalogueService)
-    {
+    public function __construct(
+        UserCatalogueService $userCatalogueService,
+        UserCatalogueRepository $userCatalogueRepository,
+    ) {
         $this->userCatalogueService = $userCatalogueService;
+        $this->userCatalogueRepository = $userCatalogueRepository;
     }
 
     public function index(Request $request)
@@ -40,9 +45,39 @@ class UserCatalogueController extends Controller
         ], ResponseEnum::BAD_REQUEST);
     }
 
+    public function update($id, Request $request)
+    {
+        if ($this->userCatalogueService->update($id, $request)) {
+            return response()->json([
+                'message' => 'Thêm mới bản ghi thành công'
+            ], ResponseEnum::OK);
+        }
+        return response()->json([
+            'message' => 'Đã có lỗi xảy ra, hãy thử lại'
+        ], ResponseEnum::BAD_REQUEST);
+    }
+
     public function deteleAll(Request $request)
     {
         if ($this->userCatalogueService->deleteAll($request)) {
+            return response()->json([
+                'message' => 'Xóa dữ liệu thành công!!'
+            ], ResponseEnum::OK);
+        }
+        return response()->json([
+            'message' => 'Đã có lỗi xảy ra, hãy thử lại'
+        ], ResponseEnum::BAD_REQUEST);
+    }
+
+    public function read($id)
+    {
+        $user = $this->userCatalogueRepository->findById($id);
+        return new UserCatalogueResource($user);
+    }
+
+    public function destroy($id)
+    {
+        if ($this->userCatalogueService->destroy($id)) {
             return response()->json([
                 'message' => 'Xóa dữ liệu thành công!!'
             ], ResponseEnum::OK);

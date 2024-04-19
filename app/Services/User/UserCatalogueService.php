@@ -62,6 +62,24 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         }
     }
 
+    public function update($id, $request)
+    {
+
+        DB::beginTransaction();
+        try {
+            $payload = $request->only($this->payload);
+            $userCatalogue = $this->userCatalogueRepository->update($id, $payload);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log::error($e->getMessage());
+            echo $e->getMessage();
+            die();
+            return false;
+        }
+    }
+
     public function deleteAll($request)
     {
 
@@ -69,6 +87,22 @@ class UserCatalogueService extends BaseService implements UserCatalogueServiceIn
         try {
             $ids = explode(',', $request->input('ids'));
             $userCatalogue = $this->userCatalogueRepository->forceDeleteAll($ids);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Log::error($e->getMessage());
+            echo $e->getMessage();
+            die();
+            return false;
+        }
+    }
+
+    public function destroy($id)
+    {
+        DB::beginTransaction();
+        try {
+            $userCatalogue = $this->userCatalogueRepository->forceDelete($id);
             DB::commit();
             return true;
         } catch (\Exception $e) {

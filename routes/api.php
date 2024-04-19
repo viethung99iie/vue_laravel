@@ -26,14 +26,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // UserCatalogue
     Route::get('/user/catalogue', [UserCatalogueController::class, 'index'])->name('user.catalogue.index');
+    Route::get('/user/catalogue/{id}', [UserCatalogueController::class, 'read'])->name('user.catalogue.detail')->where(['id' => '[0-9]+']);
     Route::post('/user/catalogue/store', [UserCatalogueController::class, 'store'])->name('user.catalogue.store');
+    Route::put('/user/catalogue/update/{id}', [UserCatalogueController::class, 'update'])->name('user.catalogue.update')->where(['id' => '[0-9]+']);
     Route::delete('/user/catalogue/deteleAll', [UserCatalogueController::class, 'deteleAll'])->name('user.catalogue.detele.all');
+    Route::delete('/user/catalogue/delete/{id}', [UserCatalogueController::class, 'destroy'])->name('user.catalogue.destroy');
 
 
     // CHANG STATUS
     Route::put('/update/status', [DashboardController::class, 'updateStatus'])->name('dashboard.update.status');
     Route::put('/update/status/all', [DashboardController::class, 'updateStatusAll'])->name('dashboard.update.status.all');
-
 });
 
 
