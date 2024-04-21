@@ -15,11 +15,11 @@ class AppServiceProvider extends ServiceProvider
     ];
     public function register(): void
     {
-         foreach($this->bindings as $key => $val){
+        foreach ($this->bindings as $key => $val) {
             $this->app->bind($key, $val);
         }
 
-         $this->app->register(RepositoryServiceProvider::class);
+        $this->app->register(RepositoryServiceProvider::class);
     }
 
     /**

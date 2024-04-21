@@ -1,41 +1,40 @@
         <script setup>
-        import { ref, computed, onMounted } from 'vue'
+        import { ref, onMounted, computed, onBeforeMount, onBeforeUnmount } from 'vue';
         import { useStore } from 'vuex'
-        import csrf from '@/config/csrf'
         import { useRouter } from 'vue-router'
-        import bus from '@/events/EventBus.js'
-        import axios from '@/config/axios'
-        import { handleFormError } from '@/helpers/helpers'
-        import Switch from '@/components/Switch.vue'
-        import { defineProps } from '@vue/runtime-dom';
+        import bus from '@/events/EventBus'
+        import Switch from '@/components/Switch.vue';
+        import axios from '@/config/axios';
         import { toast } from 'vue3-toastify';
+
+        const store = useStore()
+        const router = useRouter()
 
         const { tableConfig, endpoint, model, actions } = defineProps(['tableConfig', 'endpoint', 'model', 'actions'])
 
-        const formErrorMessage = ref({});
+        const tableData = computed(() => {
+            return store.getters['pagination/getTableData']
+        })
 
-        const store = useStore();
-        const router = useRouter()
+        const pagination = computed(() => {
+            return store.getters['pagination/getPagination']
+        })
 
-        let allChecked = ref(false);
-        let selectedRow = ref([]);
-        let switchItems = ref({});
-
-
+        const allChecked = ref(false)
+        const selectedRow = ref([])
         const field = ref({
             publish: 'publish',
         })
 
-        const tableData = computed(() => {
-            return store.getters['pagination/getTableData'];
+        onBeforeMount(() => {
+            renderData()
         })
 
-        const pagination = computed(() => {
-            return store.getters['pagination/getPagination'];
+        onMounted(() => {
+            emitSearch()
+            deleteMultiple()
+            setStatus()
         })
-
-
-
 
         const renderData = async (page, query) => {
             try {
@@ -52,12 +51,10 @@
 
                 await store.dispatch('pagination/getData', { page: currentPage, endpoint: endpoint, query: dispatchQuery })
 
-                switchItems.value = switchState;
 
-                /* HANDEL QUERT STRING  */
-                const hasQueryData = dispatchQuery && Object.keys(dispatchQuery).length !== 0;
-                const hasPageData = currentPage !== undefined && currentPage !== '';
-
+                /* HANDLE QUERY STRING */
+                const hasQueryData = dispatchQuery && Object.keys(dispatchQuery).length !== 0
+                const hasPageData = currentPage !== undefined && currentPage !== ''
                 if (hasQueryData || hasPageData) {
                     const queryString = {}
                     if (hasPageData) {
@@ -66,24 +63,14 @@
                     if (hasQueryData) {
                         Object.assign(queryString, dispatchQuery)
                     }
-                    router.push({ query: queryString })
-                }
+                    /* router.push({ query: queryString }) */
 
+                }
             } catch (error) {
-                handleFormError(error, formErrorMessage)
+                console.log(error);
             }
         }
-        const checkAll = () => {
-            if (allChecked.value) {
-                selectedRow.value = tableData.value.map((_, index) => index)
-            } else {
-                selectedRow.value = []
-            }
-        }
-        const updateCheckAll = () => {
-            const totalRow = tableData.value.length
-            allChecked.value = (selectedRow.value.length == totalRow) ? true : false;
-        }
+
 
         const emitSearch = () => {
             bus.on('table-search', searchData => {
@@ -91,56 +78,55 @@
                 renderData(searchPage, searchData)
             })
         }
-        const deleteMultiple = () => {
-            bus.off('delete-row');
+
+
+        const deleteMultiple = async () => {
+            bus.off('delete-row')
             bus.on('delete-row', async data => {
-                const ids = selectedRow.value.map((index) => tableData.value[index].id);
-                if (ids.length == 0) {
-                    toast.error('Phải chọn 1 bản ghi để thực hiện thao tác.'); return;
+                const ids = selectedRow.value.map(index => tableData.value[index].id)
+                if (ids.length === 0) {
+                    toast.error('Bạn phải chọn ít nhất 1 bản ghi để xóa')
+                    return
                 }
-                if (window.confirm('Bạn có chắc chắn muốn thực hiện thao tác này?')) {
+                if (window.confirm('Bạn có chắc chắn muốn thực hiện thao tác này')) {
                     try {
-                        const apiUrl = `${actions.deleteAll}?ids=${ids.join(',')}`;
-                        const response = await axios.delete(apiUrl);
+                        const apiUrl = `${actions.deleteAll}?ids=${ids.join(',')}`
+                        const response = await axios.delete(apiUrl)
                         await store.dispatch('pagination/deleteRows', ids)
-                        selectedRow.value = [];
-                        toast.success(response.message);
+                        selectedRow.value = []
+                        toast.success(response.message)
                     } catch (error) {
                         console.log(error);
                     }
                 }
             })
         }
-        const setStatus = () => {
-            bus.off('set-status-all');
+
+        const setStatus = async () => {
+            bus.off('set-status-all')
             bus.on('set-status-all', async data => {
-                const ids = selectedRow.value.map((index) => tableData.value[index].id);
-                if (ids.length == 0) {
-                    toast.error('Phải chọn 1 bản ghi để thực hiện thao tác.'); return;
-                }
+                const ids = selectedRow.value.map(index => tableData.value[index].id)
                 try {
-                    const response = await axios.put(actions.updateStatusAll, {
-                        ids: ids,
-                        field: data.field,
-                        model: model,
-                        value: data.value
-                    });
-                    updatetSwitchStatus(ids, data.value);
-                    selectedRow.value = [];
-                    toast.success(response.messages);
+                    const response = await axios.put(actions.updateStatusAll, { ids: ids, model: model, field: data.field, value: data.value })
+                    selectedRow.value = []
+                    updateSwitchStatus(ids, data.value)
+                    toast.success(response.messages)
+
                 } catch (error) {
                     console.log(error);
                 }
+
             })
         }
 
-        const updatetSwitchStatus = (ids, value) => {
+
+        const updateSwitchStatus = (ids, value) => {
             ids.forEach(id => {
-                if (switchItems.value.hasOwnProperty(id)) {
-                    switchItems.value[id] = value === 2;
+                if (switchState.value.hasOwnProperty(id)) {
+                    switchState.value[id] = value === 2;
                 }
-            })
-        }
+            });
+        };
 
         const switchState = computed(() => {
             const state = {};
@@ -153,11 +139,26 @@
         const getRowStatus = (id) => {
             return switchState.value ? switchState.value[id] || false : false;
         };
-        onMounted(() => {
-            renderData();
-            emitSearch();
-            deleteMultiple();
-            setStatus();
+
+        const checkAll = () => {
+            if (allChecked.value) {
+                selectedRow.value = tableData.value.map((_, index) => index)
+            } else {
+                selectedRow.value = []
+            }
+        }
+
+        const isChecked = (key) => {
+            return selectedRow.value.includes(key)
+        }
+
+        const updateCheckAll = (event, key) => {
+            const totalRow = tableData.value.length
+            allChecked.value = (totalRow === selectedRow.value.length) ? true : false;
+        }
+
+        onBeforeUnmount(() => {
+            store.dispatch('pagination/clearData')
         })
 </script>
         <template>
@@ -167,7 +168,7 @@
                         <th>
                             <input type="checkbox"
                                 class="input-checkbox check-box-item"
-                                v-model="allChecked" @change="checkAll()">
+                                v-model="allChecked" @change="checkAll">
                         </th>
                         <td v-for="(val, index) in tableConfig.field.thead"
                             :key="index"
