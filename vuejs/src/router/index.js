@@ -8,6 +8,7 @@
     import UserCatalogueDelete from '@/views/backend/user/catalogue/Delete.vue'
 
     import UserIndex from '@/views/backend/user/user/View.vue'
+    import UserStore from '@/views/backend/user/user/Store.vue'
 
 
 const router = createRouter({
@@ -19,7 +20,8 @@ const router = createRouter({
     {path: '/user/catalogue/store',name: 'user.catalogue.store',component: UserCatalogueStore,meta: {middleware: [authMiddleware]}},
      {path: '/user/catalogue/update/:id(\\d+)',name: 'user.catalogue.update',component: UserCatalogueStore,meta: {middleware: [authMiddleware]}},
     {path: '/user/catalogue/delete/:id(\\d+)',name: 'user.catalogue.delete',component: UserCatalogueDelete,meta: {middleware: [authMiddleware]}},
-    {path: '/user/index',name: 'user.index',component: UserIndex,meta: {middleware: [authMiddleware]}}
+    {path: '/user/index',name: 'user.index',component: UserIndex,meta: {middleware: [authMiddleware]}},
+    {path: '/user/create',name: 'user.create',component: UserStore,meta: {middleware: [authMiddleware]}},
   ]
 })
 

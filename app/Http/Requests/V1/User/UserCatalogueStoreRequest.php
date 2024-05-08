@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\V1\UserCatalogue;
+namespace App\Http\Requests\V1\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserStoreRequest extends FormRequest
+class UserCatalogueStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**

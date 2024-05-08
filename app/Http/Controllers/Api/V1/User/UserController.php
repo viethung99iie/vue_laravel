@@ -35,14 +35,15 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        if ($this->userService->create($request)) {
-            return response()->json([
-                'message' => 'Thêm mới bản ghi thành công'
-            ], ResponseEnum::OK);
-        }
-        return response()->json([
-            'message' => 'Đã có lỗi xảy ra, hãy thử lại'
-        ], ResponseEnum::BAD_REQUEST);
+        return $this->userService->create($request);
+        // if ($this->userService->create($request)) {
+        //     return response()->json([
+        //         'message' => 'Thêm mới bản ghi thành công'
+        //     ], ResponseEnum::OK);
+        // }
+        // return response()->json([
+        //     'message' => 'Đã có lỗi xảy ra, hãy thử lại'
+        // ], ResponseEnum::BAD_REQUEST);
     }
 
     public function update($id, Request $request)

@@ -13,7 +13,20 @@ class UserService extends BaseService implements UserServiceInterface
 {
 
     protected $userRepository;
-    protected $payload = ['name', 'description'];
+    protected $payload =
+    [
+        'email',
+        'name',
+        'password',
+        'image',
+        'phone',
+        'description',
+        'userCatalogueId',
+        'provinceId',
+        'districtId',
+        'wardId',
+        'address',
+    ];
     protected $fieldSearch = ['name'];
 
     public function __construct(
@@ -30,10 +43,6 @@ class UserService extends BaseService implements UserServiceInterface
             'publish' => $request->input('publish'),
         ];
         $relation = [];
-
-        // $extend = [
-        //     'orderBy' => ['id', 'desc']
-        // ];
         $users = $this->userRepository->pagination(
             $perpage,
             $condition,
@@ -50,6 +59,7 @@ class UserService extends BaseService implements UserServiceInterface
         DB::beginTransaction();
         try {
             $payload = $request->only($this->payload);
+            return $payload;
             $user = $this->userRepository->create($payload);
             DB::commit();
             return true;

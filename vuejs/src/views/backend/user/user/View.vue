@@ -14,7 +14,7 @@ const model = ref('User')
 
 const filter = ref({
     createTitle: 'Thêm mới thành viên',
-    createLink: '/user/store',
+    createLink: '/user/create',
 })
 
 const actions = ref({

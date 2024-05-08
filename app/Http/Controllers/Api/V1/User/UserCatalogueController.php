@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1\User;
 
 use App\Enums\ResponseEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\UserCatalogue\UserCatalogueStoreRequest;
+use App\Http\Requests\V1\User\UserCatalogueStoreRequest;
 use App\Http\Resources\UserCatalogueResource;
 use App\Repositories\User\UserCatalogueRepository;
 use App\Services\Interfaces\User\UserCatalogueServiceInterface as UserCatalogueService;
@@ -31,6 +31,22 @@ class UserCatalogueController extends Controller
         }
         return response()
             ->json($userCatalogues, ResponseEnum::OK);
+    }
+
+    public function all()
+    {
+        $userCatalogues = $this->userCatalogueRepository->all();
+        if ($userCatalogues->isEmpty()) {
+            return response()->json(['message' => 'Không có dữ liệu'], 404);
+        }
+        return response()
+            ->json(
+                [
+                    'message' => 'lấy dữ liêu thành công',
+                    'data' => $userCatalogues,
+                ],
+                ResponseEnum::OK
+            );
     }
 
     public function store(UserCatalogueStoreRequest $request)
