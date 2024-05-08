@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories\Interfaces\User;
+namespace App\Repositories\Interfaces;
 
 /**
  * Interface AttributeRepositoriesInterface
  * @package App\Repositoriess\Interfaces
  */
-interface UserRepositoryInterface
+interface ProvinceRepositoryInterface
 {
 }

@@ -6,7 +6,7 @@ import axios from '@/config/axios.js'
 import csrf from '@/config/csrf'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { handleFormError } from '@/helpers/helpers'
+import { handleFormError } from '@/helpers/helper'
 
 
 const router = useRouter();

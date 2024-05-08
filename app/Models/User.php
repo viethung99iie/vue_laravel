@@ -45,7 +45,7 @@ class User extends Authenticatable
     ];
 
     protected $attributes = [
-        'publish' => 1,
+        'publish' => 2,
     ];
 
     /**
@@ -59,7 +59,8 @@ class User extends Authenticatable
     ];
 
 
-    public function user_catalogues(){
+    public function user_catalogues()
+    {
         return $this->belongsTo(UserCatalogue::class, 'user_catalogue_id', 'id');
     }
 }

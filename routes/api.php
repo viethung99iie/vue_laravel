@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\DashboardController;
+use App\Http\Controllers\Api\V1\LocationController;
 use App\Http\Controllers\Api\V1\User\UserCatalogueController;
+use App\Http\Controllers\Api\V1\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,11 +28,25 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // UserCatalogue
     Route::get('/user/catalogue', [UserCatalogueController::class, 'index'])->name('user.catalogue.index');
+    Route::get('/user/catalogue/all', [UserCatalogueController::class, 'all'])->name('user.catalogue.all');
     Route::get('/user/catalogue/{id}', [UserCatalogueController::class, 'read'])->name('user.catalogue.detail')->where(['id' => '[0-9]+']);
     Route::post('/user/catalogue/store', [UserCatalogueController::class, 'store'])->name('user.catalogue.store');
     Route::put('/user/catalogue/update/{id}', [UserCatalogueController::class, 'update'])->name('user.catalogue.update')->where(['id' => '[0-9]+']);
     Route::delete('/user/catalogue/deteleAll', [UserCatalogueController::class, 'deteleAll'])->name('user.catalogue.detele.all');
     Route::delete('/user/catalogue/delete/{id}', [UserCatalogueController::class, 'destroy'])->name('user.catalogue.destroy');
+
+    /* USER */
+    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::get('/user/{id}', [UserController::class, 'read'])->name('user.detail')->where(['id' => '[0-9]+']);
+    Route::post('/user', [UserController::class, 'store'])->name('user.store');
+    Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update')->where(['id' => '[0-9]+']);
+    Route::delete('/user/deteleAll', [UserController::class, 'deteleAll'])->name('user.detele.all');
+    Route::delete('/user/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+
+    /* LOCATION */
+    Route::get('/provinces', [LocationController::class, 'province'])->name('province.index');
+    Route::get('/locations', [LocationController::class, 'location'])->name('provinces.location');
 
 
     // CHANG STATUS
